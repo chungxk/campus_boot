@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chung.campus.mapper.PublicMessageMapper">
+  <resultMap type="com.chung.campus.entity.PublicMessage" id="MessageBySecondary">
+    <id property="id" column="id"/>
+    <result property="title" column="title"/>
+    <result property="context" column="context" />
+    <result property="createDate" column="createDate" />
+    <result property="audit" column="audit" />
+    <result property="auditDate" column="auditDate" />
+    <result property="authorId" column="authorId" />
+    <result property="hot" column="hot"/>
+    <association property="secondaryName" javaType="com.chung.campus.entity.SecondaryName">
+      <id property="id" column="id"/>
+      <result property="secondaryCollegeName" column="secondaryCollegeName"/>
+      <result property="sid" column="sid"/>
+    </association>
+  </resultMap>
+  <select id="getAll" resultType="com.chung.campus.entity.PublicMessage" resultMap="MessageBySecondary">
+    select p.*, s.secondaryCollegeName from public_message p
+    left join secondary_college s on p.authorId = s.sid
+    where p.audit != -1
+    order by p.createDate desc, p.id desc
+  </select>
+
+  <select id="getMessageById" resultType="com.chung.campus.entity.PublicMessage" resultMap="MessageBySecondary">
+    select p.*, s.secondaryCollegeName from public_message p
+    left join secondary_college s on p.authorId = s.sid
+    where p.id = #{id}
+  </select>
+
+  <insert id="insertMessage" parameterType="com.chung.campus.entity.PublicMessage">
+    insert into public_message
+    (title, context, createDate, audit, authorId,hot)
+    values
+    (#{title}, #{context}, #{createDate}, #{audit}, #{authorId},1)
+  </insert>
+
+  <update id="updateMessage">
+    update public_message set
+    title = #{title}, context = #{context}, createDate = #{createDate}, audit = #{audit}
+    where id = #{id}
+  </update>
+
+  <update id="auditMessageById">
+    update public_message set
+    audit = #{audit}, auditDate = #{auditDate}
+    where id = #{id}
+  </update>
+
+  <select id="getHotById" resultType="com.chung.campus.entity.PublicMessage" resultMap="MessageBySecondary">
+    select p.*, s.secondaryCollegeName from public_message p
+    left join secondary_college s on p.authorId = s.sid
+    where p.id = #{messageId}
+  </select>
+
+  <update id="updateHot">
+    update public_message set
+    hot = #{hot}
+    where id = #{id}
+  </update>
+
+  <update id="delMessage">
+    update public_message set
+    audit = -1
+    where id = #{messageId}
+  </update>
+
+</mapper>

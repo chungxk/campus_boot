@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chung.campus.mapper.StudentMapper">
+
+  <select id="getAll" resultType="com.chung.campus.entity.Student" resultMap="stuById">
+    select s.*, c.* from student s
+    left join secondary_college c
+    on s.secondarycollege = c.sid
+    where 1 = 1
+    <if test="name != ''">
+      and s.name like #{name}
+    </if>
+    <if test="secondary != 'null' and secondary != -1">
+      and s.secondarycollege = #{secondary}
+    </if>
+    <if test="id != ''">
+      and s.username like #{id}
+    </if>
+    <if test="status != '-1'">
+      and s.status = #{status}
+    </if>
+  </select>
+
+  <delete id="deleteStuById">
+    delete from student
+    where username = #{id}
+  </delete>
+
+  <resultMap type="com.chung.campus.entity.Student" id="stuById">
+    <id property="id" column="id"/>
+    <result property="username" column="username" />
+    <result property="password" column="password"/>
+    <result property="name" column="name"/>
+    <result property="dormitory" column="dormitory"/>
+    <result property="schoolYear" column="schoolYear"/>
+    <result property="secondaryCollege" column="secondaryCollege"/>
+    <result property="gender" column="gender"/>
+    <result property="status" column="status"/>
+    <result property="phone" column="phone"/>
+    <result property="teacher" column="teacher"/>
+    <result property="stuClass" column="stuClass" />
+    <association property="secondaryName" javaType="com.chung.campus.entity.SecondaryName">
+      <id property="id" column="id"/>
+      <result property="secondaryCollegeName" column="secondaryCollegeName" />
+      <result property="sid" column="sid" />
+    </association>
+  </resultMap>
+
+  <select id="getStuById" resultType="com.chung.campus.entity.Student" resultMap="stuById">
+    select s.*, c.* from student s left join secondary_college c on
+    s.secondarycollege = c.sid where s.username = #{username}
+  </select>
+
+  <update id="updatePass">
+    update student set
+    password = #{password}
+    where username = #{username}
+  </update>
+
+  <update id="updateAll">
+    update student set
+    name = #{name}, dormitory = #{dormitory}, schoolyear = #{year}, gender = #{gender}, secondarycollege = #{secondary}, stuClass = #{stuClass}, teacher = #{teacher}, phone = #{phone}, status = "1"
+    where username = #{username}
+  </update>
+
+  <insert id="batchAddCount">
+    insert into student
+    (username, password)
+    values
+    (#{username}, #{username})
+  </insert>
+
+  <delete id="deleteClockInById">
+    delete from student
+    where username = #{id}
+  </delete>
+
+  <update id="updateAllWx">
+    update student set
+    name = #{name}, dormitory = #{dormitory}, schoolyear = #{year}, secondarycollege = #{secondary}, stuClass = #{stuClass}, teacher = #{teacher}, phone = #{phone}, status = "1"
+    where username = #{username}
+  </update>
+
+</mapper>

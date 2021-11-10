@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>管理员登录</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+    <script src="/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <link href="/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/icon/favicon.ico">
+</head>
+<style>
+    #username, #password {
+        width: 200px;
+    }
+    .formDiv{
+        text-align: center; /*让div内部文字居中*/
+        background-color: #fff;
+        border-radius: 20px;
+        width: 500px;
+        height: 350px;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: solid 5px #337ab7;
+    }
+    .contextDiv{
+        margin-top: 50px;
+        margin-left: 100px;
+        background-color: white;
+    }
+    .rememberMe{
+        margin-left: -200px;
+    }
+    .btnLogin{
+        left: -200px;
+    }
+
+</style>
+<body>
+<div th:include="/nullLoginFrame.html"></div>
+
+<div class="formDiv container">
+    <h1>学校疫情打卡系统</h1>
+    <form id="loginText" class="form-horizontal">
+        <div class="contextDiv">
+
+            <div class="form-group">
+                <label for="username" class="col-sm-2 control-label">账号:</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名" />
+                    <span class="help-block" style="margin: 0;">&nbsp;</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="col-sm-2 control-label">密码:</label>
+                <div class="col-sm-6">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码"/>
+                    <span class="help-block" style="margin: 0;">&nbsp;</span>
+                </div>
+            </div>
+
+            <div style="margin-left: -30px" class="warmInfo">
+
+            </div>
+
+        </div>
+        <div class="form-group btnLogin">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" style="margin-left: 172px" class="btn btn-primary" id="login" >登录</button>
+            </div>
+        </div>
+    </form>
+
+    <!--<div>
+        2016-2023才符合，空也符合<input type="text" id="submitText" />
+        <input type="submit" onclick="testTest()" />
+    </div>-->
+
+
+
+    <script>
+        function testTest(){
+            debugger
+            var testReg = /^(201[6-9]|202[0-3])$/;
+            var textText = $("#submitText").val();
+
+            if(!testReg.test(textText) && textText !== '' && textText != null){
+                alert("这是不符合的才进来的！");
+                return;
+            }
+            alert("这是符合的！")
+
+        }
+        $(function () {
+            $("#login").click(function () {
+
+                $.ajax({
+                    url: "/login",
+                    data: $("#loginText").serialize(),
+                    type: "post",
+                    success: function (result) {
+                        if(result.code === 100){
+                            if(result.extend.successCode === 101){
+                                checkMsg("#username", "success", "");
+                                checkMsg("#password", "success", "");
+                                alert("首次登录需要更改用户名！");
+                                window.location.href = "/modifyPass";
+                            }else if(result.extend.successCode === 100){
+                                checkMsg("#username", "success", "");
+                                checkMsg("#password", "success", "");
+                                window.location.href = "/clockIn";
+                            }
+                        }else if(result.code === 200){
+                            if(result.extend.failCode === 200){
+                                checkMsg("#username", "error", "用户名不存在");
+                            }else if(result.extend.failCode === 201){
+                                checkMsg("#password", "error", "密码错误");
+                            }
+                        }
+                    }
+                })
+            })
+        })
+
+        function checkMsg(ele, status, msg) {
+            $(ele).parent().removeClass("has-success has-error");
+            $(ele).next("span").text("");
+            if ("success" == status) {
+                $(ele).parent().addClass("has-success");
+                $(ele).next("span").text(msg);
+            } else if ("error" == status) {
+                $(ele).parent().addClass("has-error");
+                $(ele).next("span").text(msg);
+            }
+        }
+    </script>
+</div>
+</body>
+</html>

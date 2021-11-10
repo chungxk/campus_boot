@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chung.campus.mapper.TravelClockInMapper">
+
+  <insert id="insertClockIn" parameterType="com.chung.campus.entity.TravelClockIn">
+    insert into travel_clock_in
+    (username, dest, purpose, phone, startDate, endDate)
+    values
+    (#{username}, #{dest}, #{purpose}, #{phone}, #{startDate}, #{endDate})
+  </insert>
+
+  <resultMap type="com.chung.campus.entity.TravelClockIn" id="TravelInByStudent">
+    <id property="id" column="id"/>
+    <result property="username" column="username"/>
+    <result property="dest" column="dest" />
+    <result property="purpose" column="purpose" />
+    <result property="phone" column="phone" />
+    <result property="startDate" column="startDate" />
+    <result property="endDate" column="endDate" />
+    <result property="createDate" column="createDate" />
+    <association property="student" javaType="com.chung.campus.entity.Student">
+      <id property="id" column="id"/>
+      <result property="username" column="username"/>
+      <result property="password" column="password"/>
+      <result property="name" column="name"/>
+      <result property="dormitory" column="dormitory"/>
+      <result property="schoolYear" column="schoolYear"/>
+      <result property="secondaryCollege" column="secondaryCollege"/>
+      <result property="gender" column="gender"/>
+      <result property="status" column="status"/>
+      <result property="phone" column="phone"/>
+      <result property="teacher" column="teacher"/>
+      <result property="stuClass" column="stuClass" />
+    </association>
+  </resultMap>
+  <select id="getAll" resultType="com.chung.campus.entity.TravelClockIn" resultMap="TravelInByStudent">
+    select t.*, s.name from travel_clock_in t
+    left join student s on t.username = s.username
+    where 1 = 1
+    <if test="date != ''">
+      and t.createDate like #{date}
+    </if>
+    <if test="secondary != 'null' and secondary != -1">
+      and s.secondarycollege = #{secondary}
+    </if>
+    <if test="position != ''">
+      and t.dest like #{position}
+    </if>
+    order by createDate desc
+  </select>
+
+  <delete id="deleteClockInById">
+    delete from travel_clock_in t
+    where id = #{id} and createDate = #{createDate}
+  </delete>
+
+</mapper>
