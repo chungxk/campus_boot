@@ -12,7 +12,16 @@ spring:
     encoding: UTF-8
     servlet:
       content-type: text/html
-mybatis:
+#mybatis:
+#  configuration:
+#    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    cache-enabled: true
+logging:
+  level:
+    com.chung.cumpus.mapper: debug

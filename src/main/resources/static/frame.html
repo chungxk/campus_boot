@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<link type="text/css" rel="styleSheet"  href="css/header.css" />
+<link type="text/css" rel="styleSheet"  th:href="@{css/header.css}" />
 <script>
     $(function () {
         var currentPage = $("#currentPage").val();
@@ -33,16 +33,16 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="/clockIn" target="_self" id="clockIn" >学生打卡</a>
+                        <a th:href="@{/clockIn}" target="_self" id="clockIn" >学生打卡</a>
                     </li>
                     <li>
-                        <a href="/travelReport" target="_self" id="travelReport" >出行报备</a>
+                        <a th:href="@{/travelReport}" target="_self" id="travelReport" >出行报备</a>
                     </li>
                     <li>
-                        <a href="/publicMessage" target="_self" id="publicMessage" >信息发布</a>
+                        <a th:href="@{/publicMessage}" target="_self" id="publicMessage" >信息发布</a>
                     </li>
                     <li>
-                        <a href="/stuInfo" target="_self" id="stuInfo">学生信息</a>
+                        <a th:href="@{/stuInfo}" target="_self" id="stuInfo">学生信息</a>
                     </li>
 
                     <li style="margin-left: 700px">
@@ -51,9 +51,9 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu slideAdminLi" aria-labelledby="dropdownMenu1">
-                            <li><a href="/modifyPass">修改密码</a></li>
-                            <li><a href="/exitLogin">退出登录</a></li>
-                            <li><a href="/aboutUs">关于我们</a></li>
+                            <li><a th:href="@{/modifyPass}">修改密码</a></li>
+                            <li><a th:href="@{/exitLogin}">退出登录</a></li>
+                            <li><a th:href="@{/aboutUs}">关于我们</a></li>
                         </ul>
                     </li>
 
